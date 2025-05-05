@@ -8,7 +8,7 @@ pool:
 
 variables:
 - name: container_registry
-  value: go2cloud
+  value: DevOps2AzContainerRegistry-go2cloud
 - name: repository
   value: internal/azurenamingtool
 
