@@ -13,32 +13,34 @@ variables:
 - name: repository
   value: internal/azurenamingtool
 
-steps:
-  - task: CmdLine@2
-    displayName: 'Install emulator'
-    inputs:
-      script: 'sudo apt-get install -y qemu-system qemu-user-static'
+jobs:
+- job: CreateDockerContainer
+  steps:
+    # - task: CmdLine@2
+    #   displayName: 'Install emulator'
+    #   inputs:
+    #     script: 'sudo apt-get install -y qemu-system qemu-user-static'
 
-  - task: Docker@2
-    displayName: 'Login'
-    inputs:
-      containerRegistry: $(container_registry)
-      command: 'login'
+    - task: Docker@2
+      displayName: 'Login'
+      inputs:
+        containerRegistry: $(container_registry)
+        command: 'login'
 
-  - task: Docker@2
-    displayName: 'Build'
-    inputs:
-      containerRegistry: $(container_registry)
-      repository: $(repository)
-      command: 'build'
-      arguments: '--platform linux/arm64'
-      Dockerfile: 'Dockerfile'
-      tags: 'latest'
+    - task: Docker@2
+      displayName: 'Build'
+      inputs:
+        containerRegistry: $(container_registry)
+        repository: $(repository)
+        command: 'build'
+        arguments: '--platform linux/arm64'
+        Dockerfile: 'Dockerfile'
+        tags: 'latest'
 
-  - task: Docker@2
-    displayName: 'Push'
-    inputs:
-      containerRegistry: $(container_registry)
-      repository: $(repository)
-      command: 'push'
-      tags: 'latest'
+    - task: Docker@2
+      displayName: 'Push'
+      inputs:
+        containerRegistry: $(container_registry)
+        repository: $(repository)
+        command: 'push'
+        tags: 'latest'
