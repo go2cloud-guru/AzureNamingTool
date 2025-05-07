@@ -34,7 +34,7 @@ jobs:
         repository: $(repository)
         command: 'build'
         arguments: '--platform linux/arm64'
-        Dockerfile: 'Dockerfile'
+        Dockerfile: '**/src/Dockerfile'
         tags: 'latest'
 
     - task: Docker@2
