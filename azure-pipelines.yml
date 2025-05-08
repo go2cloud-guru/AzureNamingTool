@@ -4,8 +4,10 @@ trigger:
       - main
 
 pool:
-  name: OnPremUX
-  vmImage: 'ubuntu-latest'
+  # name: OnPremUX
+  # vmImage: 'ubuntu-latest'
+  name: OnPremWin
+  vmImage: 'windows-latest'
 
 variables:
 - name: container_registry
@@ -37,22 +39,30 @@ jobs:
     #     Dockerfile: '**/src/Dockerfile'
     #     tags: 'latest'
 
-    # - task: PowerShell@2
-    #   displayName: 'Set up Docker Buildx and QEMU'
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #       docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-    #       docker buildx create --name mybuilder --driver docker-container --use
-    #       docker buildx inspect --bootstrap
+    - task: PowerShell@2
+      displayName: 'Set up Docker Buildx and QEMU'
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          docker buildx create --name mybuilder --driver docker-container --use
+          docker buildx inspect --bootstrap
 
-    - task: Bash@3
+    - task: PowerShell@2
       displayName: 'Run buildx'
       inputs:
         workingDirectory: './src'
         targetType: inline
         script: |
-          docker buildx build --platform linux/arm64 .
+          docker buildx build --platform linux/amd64,linux/arm64 .
+
+    # - task: Bash@3
+    #   displayName: 'Run buildx'
+    #   inputs:
+    #     workingDirectory: './src'
+    #     targetType: inline
+    #     script: |
+    #       docker buildx build --platform linux/arm64 .
 
     - task: Docker@2
       displayName: 'Push'
